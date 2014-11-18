@@ -57,9 +57,10 @@ class ProxyCheck(callbacks.Plugin):
 		self._count = 0
 
 	def proxychannel (self,irc,msg,args,channel):
-		""" [<channel>] checks all users against DNSBLs
+		"""[<channel>]
 		
-		returns those who has an entry"""
+		Checks all users against DNSBLs and returns those who
+		have an entry"""
 		hs = []
 		r = []
 		for n in list(irc.state.channels[channel].users):
@@ -74,8 +75,9 @@ class ProxyCheck(callbacks.Plugin):
 	proxychannel = wrap(proxychannel,['op','channel'])
 
 	def proxyuser (self,irc,msg,args,nick):
-		"""<nick|ip> 
-		check<nick|ip>  against configured DNSBLS"""
+		"""<nick|ip>
+
+		Checks <nick|ip> against configured DNSBLS"""
 		if ircutils.isUserHostmask(nick)
 			h = irc.state.nickToHostmask(nick)
 			(n,i,h) = ircutils.splitHostmask(h)
@@ -89,7 +91,9 @@ class ProxyCheck(callbacks.Plugin):
 	proxyuser = wrap(proxyuser,['owner','text'])
 
 	def count (self,irc,msg,args):
-		""" return number of dig calls since plugin has been launched"""
+		"""takes no arguments
+
+		Return the number of dig calls since plugin has been loaded"""
 		irc.reply('dig has been called %s' % self._count)
 	count = wrap(count,['owner'])
 
