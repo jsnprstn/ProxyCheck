@@ -68,7 +68,7 @@ class ProxyCheck(callbacks.Plugin):
 		for hostmask in hs:
 			(n,i,h) = ircutils.splitHostmask(hostmask)
 			check = self.check(h,channel)
-			if check and len(check):
+			if check:
 				r.append('%s (%s)' % (n,', '.join(check)))
 		irc.reply(', '.join(r))
 	proxychannel = wrap(proxychannel,['op','channel'])
@@ -82,7 +82,7 @@ class ProxyCheck(callbacks.Plugin):
 		else:
 			h = nick
 		check = self.check(h,'')
-		if check and len(check):
+		if check:
 			irc.reply(', '.join(check))
 		else:
 			irc.reply('%s is clean' % nick)
@@ -100,7 +100,7 @@ class ProxyCheck(callbacks.Plugin):
 			logChannel = self.registryValue('logChannel',channel=channel)
 			if logChannel in irc.state.channels:
 				check = self.check(h,channel)
-				if check and len(check):
+				if check:
 					irc.queueMsg(ircmsgs.privmsg(logChannel,'[%s] %s (%s)' % (channel,msg.prefix,', '.join(check))))
 
 	def check (self,ip,channel):
@@ -151,7 +151,7 @@ class ProxyCheck(callbacks.Plugin):
 			return []
 		h = self.registryValue('honeypotKey') + '.' + h + '.dnsbl.httpbl.org'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			for entry in m.split('\n'):
 				msgs = entry.split('.')
 				if msgs[0] != '127':
@@ -180,7 +180,7 @@ class ProxyCheck(callbacks.Plugin):
 	def efnet (self,h):
 		h = h + '.rbl.efnetrbl.org'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
 					return 'efnet|Open Proxy'
@@ -198,7 +198,7 @@ class ProxyCheck(callbacks.Plugin):
 	def sorbs(self,h):
 		h = h + '.dnsbl.sorbs.net'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
 					return 'sorbs|Open HTTP Proxy'
@@ -227,7 +227,7 @@ class ProxyCheck(callbacks.Plugin):
 	def spamcop (self,h):
 		h = h + '.bl.spamcop.net'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
 					return 'spamcop|listed'
@@ -236,7 +236,7 @@ class ProxyCheck(callbacks.Plugin):
 	def tornevall (self,h):
 		h = h + '.dnsbl.tornevall.org'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
 					return 'tornevall|Proxy has been scanned' 
@@ -256,7 +256,7 @@ class ProxyCheck(callbacks.Plugin):
 	def spamhaus (self,h):
 		h = h + '.zen.spamhaus.org'
 		m = self.dig(h)
-		if m and len(m):
+		if m:
 			SBL = False
 			SBLCSS = False
 			CBL = False
