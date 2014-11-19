@@ -65,13 +65,13 @@ class ProxyCheck(callbacks.Plugin):
 		r = []
 		for n in list(irc.state.channels[channel].users):
 			hs.append(irc.state.nickToHostmask(n))
-		irc.reply('please wait, %s users to check' % len(hs))
+		irc.reply(_('please wait, %s users to check') % len(hs))
 		for hostmask in hs:
 			(n,i,h) = ircutils.splitHostmask(hostmask)
 			check = self.check(h,channel)
 			if check:
-				r.append('%s (%s)' % (n,', '.join(check)))
-		irc.reply(', '.join(r))
+				r.append(format(_('%s (%L)'), n, check))
+		irc.replies(r)
 	proxychannel = wrap(proxychannel,['op','channel'])
 
 	def proxyuser (self,irc,msg,args,nick):
@@ -85,16 +85,16 @@ class ProxyCheck(callbacks.Plugin):
 			h = nick
 		check = self.check(h,'')
 		if check:
-			irc.reply(', '.join(check))
+			irc.replies(check)
 		else:
-			irc.reply('%s is clean' % nick)
+			irc.reply(_('%s is clean') % nick)
 	proxyuser = wrap(proxyuser,['owner','text'])
 
 	def count (self,irc,msg,args):
 		"""takes no arguments
 
 		Return the number of dig calls since plugin has been loaded"""
-		irc.reply('dig has been called %s' % self._count)
+		irc.reply(_('dig has been called %s') % self._count)
 	count = wrap(count,['owner'])
 
 	def doJoin(self,irc,msg):
@@ -164,22 +164,22 @@ class ProxyCheck(callbacks.Plugin):
 				score = floor(100 * float(msgs[2])/float(255))
 				type = ''
 				if msgs[3] == '0':
-					type = 'SearchEngine'
+					type = _('SearchEngine')
 				elif msgs[3] == '1':
-					type = 'Suspicious'
+					type = _('Suspicious')
 				elif msgs[3] == '2':
-					type = 'Harvest'
+					type = _('Harvest')
 				elif msgs[3] == '3':
-					type = 'Suspicious & Harvester'
+					type = _('Suspicious & Harvester')
 				elif msgs[3] == '4':
-					type = 'Comment spammer'
+					type = _('Comment spammer')
 				elif msgs[3] == '5':
-					type = 'Suspicious & Comment Spammer'
+					type = _('Suspicious & Comment Spammer')
 				elif msgs[3] == '6':
-					type = 'Harvester & Comment Spammer'
+					type = _('Harvester & Comment Spammer')
 				elif msgs[3] == '7':
-					type = 'Suspicious & Harvester & Comment Spammer'
-				return 'honeypot|%s with a score of %s%%, updated %s day(s) ago' % (type,score,days)
+					type = _('Suspicious & Harvester & Comment Spammer')
+				return _('honeypot|%s with a score of %s%%, updated %s day(s) ago') % (type,score,days)
 
 	def efnet (self,h):
 		h = h + '.rbl.efnetrbl.org'
@@ -187,15 +187,15 @@ class ProxyCheck(callbacks.Plugin):
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
-					return 'efnet|Open Proxy'
+					return _('efnet|Open Proxy')
 				elif entry == '127.0.0.2':
-					return 'efnet|Spreading virus and trojans'
+					return _('efnet|Spreading virus and trojans')
 				elif entry == '127.0.0.3':
-					return 'efnet|Virus and trojans known to self-spread'
+					return _('efnet|Virus and trojans known to self-spread')
 				elif entry == '127.0.0.4':
-					return 'efnet|tor'
+					return _('efnet|tor')
 				elif entry == '127.0.0.5':
-					return 'efnet|Drones/Flooding'
+					return _('efnet|Drones/Flooding')
 		return None
 
 
@@ -205,17 +205,17 @@ class ProxyCheck(callbacks.Plugin):
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
-					return 'sorbs|Open HTTP Proxy'
+					return _('sorbs|Open HTTP Proxy')
 				elif entry == '127.0.0.3':
-					return 'sorbs|Open Socket Proxy'
+					return _('sorbs|Open Socket Proxy')
 				elif entry == '127.0.0.4':
-					return 'sorbs|Open Proxy'
+					return _('sorbs|Open Proxy')
 				elif entry == '127.0.0.5':
-					return 'sorbs|Open SMTP relay'
+					return _('sorbs|Open SMTP relay')
 				elif entry == '127.0.0.7':
-					return 'sorbs|abusable vulnerabilities'
+					return _('sorbs|abusable vulnerabilities')
 				elif entry == '127.0.0.9':
-					return 'sorbs|Zombie'
+					return _('sorbs|Zombie')
 		return None
 
 	def dig (self,url):
@@ -234,7 +234,7 @@ class ProxyCheck(callbacks.Plugin):
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
-					return 'spamcop|listed'
+					return _('spamcop|listed')
 		return None
 
 	def tornevall (self,h):
@@ -243,17 +243,17 @@ class ProxyCheck(callbacks.Plugin):
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
-					return 'tornevall|Proxy has been scanned' 
+					return _('tornevall|Proxy has been scanned' )
 				elif entry == '127.0.0.2':
-					return 'tornevall|Proxy is working'
+					return _('tornevall|Proxy is working')
 				elif entry == '127.0.0.8':
-					return 'tornevall|Proxy tested but timeout'
+					return _('tornevall|Proxy tested but timeout')
 				elif entry == '127.0.0.32':
-					return 'tornevall|Proxy has different ip'
+					return _('tornevall|Proxy has different ip')
 				elif entry == '127.0.0.64':
-					return 'tornevall|Abusive ip'
+					return _('tornevall|Abusive ip')
 				elif entry == '127.0.0.128':
-					return 'tornevall|Anonymous proxy'
+					return _('tornevall|Anonymous proxy')
 
 		return None
 
@@ -275,15 +275,15 @@ class ProxyCheck(callbacks.Plugin):
 				elif entry == '127.0.0.10' or entry == '127.0.0.11':
 					PBL = True
 			if SBL:
-				return 'SpamHaus|SBL'
+				return _('SpamHaus|SBL')
 			elif SBLCSS:
-				return 'SpamHaus|SBLCSS'
+				return _('SpamHaus|SBLCSS')
 			elif CBL:
-				return 'SpamHaus|CBL'
+				return _('SpamHaus|CBL')
 			elif PBL:
-				return 'SpamHaus|PBL'
+				return _('SpamHaus|PBL')
 			else:
-				return 'SpamHaus|Unknown : %s' % m
+				return _('SpamHaus|Unknown : %s') % m
 		return None
 
 Class = ProxyCheck
