@@ -78,7 +78,7 @@ class ProxyCheck(callbacks.Plugin):
 		"""<nick|ip>
 
 		Checks <nick|ip> against configured DNSBLS"""
-		if ircutils.isUserHostmask(nick)
+		if ircutils.isUserHostmask(nick):
 			h = irc.state.nickToHostmask(nick)
 			(n,i,h) = ircutils.splitHostmask(h)
 		else:
