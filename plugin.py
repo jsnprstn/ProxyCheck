@@ -154,7 +154,7 @@ class ProxyCheck(callbacks.Plugin):
 		if len(self.registryValue('honeypotKey')) == 0:
 			return []
 		h = self.registryValue('honeypotKey') + '.' + h + '.dnsbl.httpbl.org'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			for entry in m.split('\n'):
 				msgs = entry.split('.')
@@ -183,7 +183,7 @@ class ProxyCheck(callbacks.Plugin):
 
 	def efnet (self,h):
 		h = h + '.rbl.efnetrbl.org'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
@@ -198,10 +198,9 @@ class ProxyCheck(callbacks.Plugin):
 					return _('efnet|Drones/Flooding')
 		return None
 
-
 	def sorbs(self,h):
 		h = h + '.dnsbl.sorbs.net'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
@@ -218,19 +217,9 @@ class ProxyCheck(callbacks.Plugin):
 					return _('sorbs|Zombie')
 		return None
 
-	def dig (self,url):
-		self._count = self._count + 1
-		m = None
-		try:
-			args = ['dig','+short',url]
-			(m,err) = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-		except subprocess.CalledProcessError:
-			m = None
-		return m
-
 	def spamcop (self,h):
 		h = h + '.bl.spamcop.net'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.2':
@@ -239,7 +228,7 @@ class ProxyCheck(callbacks.Plugin):
 
 	def tornevall (self,h):
 		h = h + '.dnsbl.tornevall.org'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			for entry in m.split('\n'):
 				if entry == '127.0.0.1':
@@ -254,12 +243,11 @@ class ProxyCheck(callbacks.Plugin):
 					return _('tornevall|Abusive ip')
 				elif entry == '127.0.0.128':
 					return _('tornevall|Anonymous proxy')
-
 		return None
 
 	def spamhaus (self,h):
 		h = h + '.zen.spamhaus.org'
-		m = self.dig(h)
+		m = self.dig(['dig','+short',h])
 		if m:
 			SBL = False
 			SBLCSS = False
@@ -284,6 +272,35 @@ class ProxyCheck(callbacks.Plugin):
 				return _('SpamHaus|PBL')
 			else:
 				return _('SpamHaus|Unknown : %s') % m
+		return None
+
+	def dronebl (self,h):
+		h = h + '.dnsbl.dronebl.org'
+		m = self.dig(['dig','+short',h])
+		if m:
+			for entry in m.split('\n'):
+				if entry == '127.0.0.3':
+					return _('dronebl|Irc Drone')
+				elif entry == '127.0.0.5':
+					return _('dronebl|Bottler')
+				elif entry == '127.0.0.6':
+					return _('dronebl|Unknown spambot or drone')
+				elif entry == '127.0.0.7':
+					return _('dronebl|DDOS Drone')
+				elif entry == '127.0.0.8':
+					return _('dronebl|Sock Proxy')
+				elif entry == '127.0.0.9':
+					return _('dronebl|Http Proxy')
+				elif entry == '127.0.0.10':
+					return _('dronebl|ProxyChain')
+				elif entry == '127.0.0.13':
+					return _('dronebl|Brute force attackers')
+				elif entry == '127.0.0.14':
+					return _('dronebl|Open Wingate Proxy')
+				elif entry == '127.0.0.15':
+					return _('dronebl|Compromised router / gateway')
+				elif entry == '127.0.0.17':
+					return _('dronebl|Automatically determined botnet IPs (experimental)')
 		return None
 
 Class = ProxyCheck

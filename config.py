@@ -53,6 +53,6 @@ conf.registerGlobalValue(ProxyCheck, 'honeypotKey',
 conf.registerChannelValue(ProxyCheck, 'logChannel',
     registry.String("", """if filled with a #channel, bot will do check on join and announce anything that has an entry in dnsbl"""))
 conf.registerChannelValue(ProxyCheck, 'dnsbls',
-    registry.CommaSeparatedListOfStrings(['spamhaus','tornevall','sorbs','spamcop','efnet','honeypot'],"""list of supported dnsbls"""))
+    registry.CommaSeparatedListOfStrings(['spamhaus','tornevall','sorbs','spamcop','efnet','honeypot','dronebl'],"""list of supported dnsbls"""))
 
 # vim:set shiftwidth=4 tabstop=4 expandtab textwidth=79:
