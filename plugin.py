@@ -304,7 +304,16 @@ class ProxyCheck(callbacks.Plugin):
 				elif entry == '127.0.0.17':
 					return _('dronebl|Automatically determined botnet IPs (experimental)')
 		return None
-
+	
+	def dig (self,args):
+		self._count = self._count + 1
+		m = None
+		try:
+			(m,err) = subprocess.Popen(args,stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+		except subprocess.CalledProcessError:
+			m = None
+		return m
+	
 Class = ProxyCheck
 
 
