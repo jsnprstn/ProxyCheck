@@ -146,6 +146,8 @@ class ProxyCheck(callbacks.Plugin):
 					m = self.honeypot(h)
 				elif entry == 'efnet':
 					m = self.efnet(h)
+				elif entry == 'dronebl':
+					m = self.dronebl(h)
 				if m:
 					r.append(m)
 			return r
